@@ -44,7 +44,9 @@
 (defn tutorial-active? []
   (true? (session/get :tutorial)))
 
-(defn print-help []
+(defn print-help
+  "Print helper to screen."
+  []
   (let [help-str ["Helper functions:"
                   "start - Starts the tutorial"
                   "restart - Restarts the tutorial"
@@ -87,6 +89,9 @@
   (when (string? s)
     (session/set! :user-name s)
     {:user-name s}))
+
+(defn set-step [step]
+   (session/set! :step step))
 
 (defn set-prompt
   "Change the prompt style."
@@ -131,7 +136,7 @@
                                      'my-name set-name
                                      'next-step inc-step!
                                      'prev-step dec-step!
-                                     'set-step (when DEBUG (fn [v] (session/set! :step v)))
+                                     'set-step (when DEBUG set-step)
                                      'set-prompt set-prompt
                                      'more (fn [] true)
                                      'help print-help}}})
@@ -152,7 +157,7 @@
           step (nth tutorial step-idx)
           test-fn (:test step)]
       (try (when (test-fn out)
-             (println "HUUUUUUU")
+             (debug "TEST PASSED")
              (inc-step!))
            (catch :default _)))))
 
@@ -201,6 +206,7 @@
                ;; Append to history
                (write-repl! out-str))
              (catch :default e
+               (println "error")
                (debug "error" (ex-data e))
                (cond (string/includes? (.-message e) "EOF while reading")
                      (let [err-data (ex-data e)
