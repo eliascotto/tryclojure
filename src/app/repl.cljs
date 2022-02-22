@@ -122,7 +122,10 @@
              ".")))))
 
 ;; Initialize an internal print funcion
-(sci/set-print-fn (fn [s] (write-repl! s)))
+(sci/set-print-fn (fn [s]
+                    (if (fn? s)
+                      "<function>"
+                      (write-repl! s))))
 
 ;; Append the start-tutorial function as 'start
 (sci/extend-ctx {:namespaces {'user {'start start-tutorial
@@ -285,6 +288,7 @@
     [keybind/with-keybind {:ctrl-c (fn [e]
                                     (reset! repl-input nil)
                                     (reset! repl-multiline nil)
+                                    (reset! input-placeholder nil)
                                     (.preventDefault e))}
      [:div {:class ["border"
                     "border-gray-300"
