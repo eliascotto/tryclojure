@@ -93,7 +93,7 @@
      
   To create a vector you need to include the items into squared brackets `[]` without any separator.
      
-  Create a vector of elements, like your favorite names for cats. "
+  Create a vector of elements, like your favorite names for cats `[\"luna\" \"milu\" \"boris\"]`. "
     :test #(vector? %)}
    ;; Variables
    {:title "Def your variables"

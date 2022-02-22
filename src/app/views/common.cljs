@@ -7,6 +7,7 @@
   [:div {:class ["xl:my-10"
                  "lg:my-5"
                  "md:my-5"
+                 "my-3"
                  "mx-auto"
                  "w-full"
                  "px-2"
