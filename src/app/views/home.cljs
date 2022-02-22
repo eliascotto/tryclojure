@@ -30,17 +30,25 @@ Type `(start)` when you're ready!")
       [(:title step) (:content step)])
     [intro-title intro-content]))
 
-(defn- link-target [text state]
+(defn- link-target
+  "Add target=_blank to link in markdown."
+  [text state]
   [(string/replace text #"<a " "<a target=\"_blank\" ")
    state])
 
+;; Regex to find [[var]] pattern in strings
 (def re-doublebrackets #"(\[\[(.+)\]\])")
 
-(defn- session-vars [text state]
+(defn- session-vars
+  "Replace `[[var]]` in markdown text using session
+  variables."
+  [text state]
   [(let [res (re-find re-doublebrackets text)]
      (if res
        (let [k (keyword (last res))
-             v (session/get k)]
+             v (if (session/has? k)
+                 (session/get k)
+                 "unset")]
          (string/replace text re-doublebrackets v))
        text))
    state])

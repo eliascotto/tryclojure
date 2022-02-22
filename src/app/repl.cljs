@@ -23,6 +23,10 @@
 ;; Set a command input placeholder in case of EOF error
 (defonce input-placeholder (r/atom nil))
 
+;; External to the component because needs to be used by
+;; the focus function
+(defonce input-el (r/atom nil))
+
 (defn write-repl!
   "Append `s` to the REPL history.
   Optional keyword `k` to use as a type."
@@ -34,12 +38,17 @@
 (defn inc-step!
   "Increment the current tutorial steps."
   []
-  (session/inc! :step))
+  (let [tut-len (count tutorial)
+        curr-step (session/get :step)]
+    (when (< curr-step (dec tut-len))
+      (session/inc! :step))
+    nil))
 
 (defn dec-step!
   "Increment the current tutorial steps."
   []
-  (session/dec! :step))
+  (session/dec! :step)
+  nil)
 
 (defn tutorial-active? []
   (true? (session/get :tutorial)))
@@ -81,7 +90,7 @@
 (defn restart-tutorial
   "Reset the tutorial session."
   []
-  (reset! session/session {}))
+  (session/reset-session!))
 
 (defn set-name
   "Save user name into the session."
@@ -182,6 +191,13 @@
     (write-repl! in :input)
     (write-repl! in :input-multi)))
 
+(defn reset-input
+  "Reset both the atom and the input value
+  to avoid on-change event wrong behaviour."
+  []
+  (reset! repl-input nil)
+  (set! (.-value @input-el) ""))
+
 (defn on-keydown
   "Onkeydown event for the REPL input; Evaluate the string
   using SCI and add the output/error to the REPL. Manage
@@ -200,30 +216,27 @@
                              (pr-str out))]
                (check-tutorial-test out)
                (debug "output: " out-str)
-               (reset! repl-input nil)
                (reset! repl-multiline nil)
                (reset! input-placeholder nil)
                ;; Append to history
                (write-repl! out-str))
              (catch :default e
-               (println "error")
                (debug "error" (ex-data e))
                (cond (string/includes? (.-message e) "EOF while reading")
                      (let [err-data (ex-data e)
                            delimiter (:edamame/expected-delimiter err-data)
-                           col (:column err-data)] 
-                       (reset! repl-input nil)
+                           col (:column err-data)]
                        (reset! repl-multiline cmd)
                        (reset! input-placeholder (str "Expected delimiter `"
-                                                       delimiter
-                                                       "` column: "
-                                                       col)))
+                                                      delimiter
+                                                      "` column: "
+                                                      col)))
                      :else
-                     (do (reset! repl-input nil)
-                         (reset! repl-multiline nil)
+                     (do (reset! repl-multiline nil)
                          (reset! input-placeholder nil)
                          ;; Append error to history
-                         (write-repl! (.-message e) :error)))))))
+                         (write-repl! (.-message e) :error)))))
+        (reset-input)))
     ;; Arrow Up
     (when (= (.-key e) "ArrowUp")
       (let [inputs (filter #(= (:type %) :input) @repl-history)
@@ -265,10 +278,6 @@
     (js/setTimeout
      #(set! (.-scrollTop el) (.-scrollHeight el))
      0)))
-
-;; External to the component because needs to be used by
-;; the focus function
-(defonce input-el (r/atom nil))
 
 (defn focus-input []
   (.focus @input-el))
