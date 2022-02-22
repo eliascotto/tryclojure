@@ -15,7 +15,10 @@
 
 Let's have some fun! Here on the right you have a **REPL**, a command line
 with a _read-eval-print_ loop. Everything you write will be evaluated. 
-Try to type some expressions as `(+ 1 2)` or click on code to auto insert.\n\nType `(start)` when you're ready!")
+Try to type some expressions as `(+ 1 2)` or click on code to auto insert. 
+   You can type `(help)` for more commands.
+   
+Type `(start)` when you're ready!")
 
 (defn compute-step
   "Returns a list of `title` and `content`
@@ -63,7 +66,7 @@ Try to type some expressions as `(+ 1 2)` or click on code to auto insert.\n\nTy
                    "dark:bg-gray-800"
                    "shadow-lg"
                    "sm:rounded-l-md"
-                   "rounded-t-md"
+                   "xs:rounded-t-md"
                    "w-full"
                    "md:p-8"
                    "p-6"

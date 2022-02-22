@@ -6,7 +6,8 @@
    [app.utils :as utils :refer [get-val in?]]
    [app.env :refer [debug DEBUG]]
    [app.session :as session]
-   [app.tutorial :refer [tutorial]]))
+   [app.tutorial :refer [tutorial]]
+   [app.keybind :as keybind]))
 
 ;; Collection of map with the REPL command history.
 (defonce repl-history
@@ -18,6 +19,9 @@
 
 ;; Store a multiline command as a single string
 (defonce repl-multiline (r/atom nil))
+
+;; Set a command input placeholder in case of EOF error
+(defonce input-placeholder (r/atom nil))
 
 (defn write-repl!
   "Append `s` to the REPL history.
@@ -39,6 +43,21 @@
 
 (defn tutorial-active? []
   (true? (session/get :tutorial)))
+
+(defn print-help []
+  (let [help-str ["Helper functions:"
+                  "start - Starts the tutorial"
+                  "restart - Restarts the tutorial"
+                  "clear - Clears the entire REPL"
+                  "next-step - Jumps to the next step"
+                  "prev-step  - Jumps to the previous step"
+                  ""
+                  "Use (doc) for print the documentation of a function or a var given its name."
+                  ""
+                  "Press Ctrl-C to clear the REPL input."]]
+    (doseq [s help-str]
+      (write-repl! s)))
+  nil)
 
 ;; -------------------------
 ;; SCI utils
@@ -114,7 +133,11 @@
                                      'prev-step dec-step!
                                      'set-step (when DEBUG (fn [v] (session/set! :step v)))
                                      'set-prompt set-prompt
-                                     'more (fn [] true)}}})
+                                     'more (fn [] true)
+                                     'help print-help}}})
+
+;; Add REPL functions like `doc`
+(sci/eval-string "(require '[clojure.repl :refer :all])")
 
 ;; -------------------------
 ;; REPL element
@@ -147,12 +170,17 @@
   []
   (if (empty? @repl-multiline) @repl-input @repl-multiline))
 
-(defn update-multiline! []
+(defn update-multiline!
+  "If `repl-multiline` is not empty, append `repl-input` value
+  to it."
+  []
   (when (not-empty @repl-multiline)
     (->> (str @repl-multiline @repl-input)
          (reset! repl-multiline))))
 
-(defn write-input! [in]
+(defn write-input! 
+  "Append the current input to the respective atom."
+  [in]
   (if (empty? @repl-multiline)
     (write-repl! in :input)
     (write-repl! in :input-multi)))
@@ -176,15 +204,25 @@
                (debug "output: " out)
                (reset! repl-input nil)
                (reset! repl-multiline nil)
+               (reset! input-placeholder nil)
                ;; Append to history
                (write-repl! out-str))
              (catch :default e
+               (debug "error" (ex-data e))
                (cond (string/includes? (.-message e) "EOF while reading")
-                     (do (reset! repl-input nil)
-                         (reset! repl-multiline cmd))
+                     (let [err-data (ex-data e)
+                           delimiter (:edamame/expected-delimiter err-data)
+                           col (:column err-data)] 
+                       (reset! repl-input nil)
+                       (reset! repl-multiline cmd)
+                       (reset! input-placeholder (str "Expected demiliter `"
+                                                       delimiter
+                                                       " column: "
+                                                       col)))
                      :else
                      (do (reset! repl-input nil)
                          (reset! repl-multiline nil)
+                         (reset! input-placeholder nil)
                          ;; Append error to history
                          (write-repl! (.-message e) :error)))))))
     ;; Arrow Up
@@ -244,40 +282,45 @@
                scroll-watch (r/track! #(scroll-bottom
                                         @container-el
                                         @repl-history))]
-    [:div {:class ["border"
-                   "border-gray-300"
-                   "dark:border-0"
-                   "rounded-md"
-                   "bg-white"
-                   "dark:bg-slate-800"
-                   "font-mono"
-                   "text-sm"
-                   "text-black"
-                   "dark:text-white"
-                   "sm:h-[500px]"
-                   "h-[200px]"
-                   "xl:max-w-[618px]"
-                   "lg:max-w-[518px]"
-                   "md:max-w-[350px]"
-                   "overflow-auto"
-                   "p-3"
-                   "-my-8"
-                   "shadow-2xl"]
-           :ref #(reset! container-el %)
-           :on-click focus-input}
-     [history-view]
-     [:div {:class ["flex" "flex-row" "pl-2"]}
-      (if (empty? @repl-multiline)
-        [prompt]
-        [:span ">"])
-      [:input {:class ["flex-1"
-                       "px-2"
-                       "outline-none"
-                       "bg-transparent"]
-               :ref #(reset! input-el %)
-               :value @repl-input
-               :on-focus #(reset! has-focus true)
-               :on-blur #(reset! has-focus false)
-               :on-key-down on-keydown
-               :on-change #(reset! repl-input (get-val %))}]]]
+    [keybind/with-keybind {:ctrl-c (fn [e]
+                                    (reset! repl-input nil)
+                                    (reset! repl-multiline nil)
+                                    (.preventDefault e))}
+     [:div {:class ["border"
+                    "border-gray-300"
+                    "dark:border-0"
+                    "rounded-md"
+                    "bg-white"
+                    "dark:bg-slate-800"
+                    "font-mono"
+                    "text-sm"
+                    "text-black"
+                    "dark:text-white"
+                    "sm:h-[500px]"
+                    "h-[200px]"
+                    "xl:max-w-[618px]"
+                    "lg:max-w-[518px]"
+                    "md:max-w-[350px]"
+                    "overflow-auto"
+                    "p-3"
+                    "-my-8"
+                    "shadow-2xl"]
+            :ref #(reset! container-el %)
+            :on-click focus-input}
+      [history-view]
+      [:div {:class ["flex" "flex-row" "pl-2"]}
+       (if (empty? @repl-multiline)
+         [prompt]
+         [:span ">"])
+       [:input {:class ["flex-1"
+                        "px-2"
+                        "outline-none"
+                        "bg-transparent"]
+                :placeholder @input-placeholder
+                :ref #(reset! input-el %)
+                :value @repl-input
+                :on-focus #(reset! has-focus true)
+                :on-blur #(reset! has-focus false)
+                :on-key-down on-keydown
+                :on-change #(reset! repl-input (get-val %))}]]]]
     (finally (r/dispose! scroll-watch))))
