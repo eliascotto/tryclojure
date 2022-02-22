@@ -215,7 +215,7 @@
                            col (:column err-data)] 
                        (reset! repl-input nil)
                        (reset! repl-multiline cmd)
-                       (reset! input-placeholder (str "Expected demiliter `"
+                       (reset! input-placeholder (str "Expected delimiter `"
                                                        delimiter
                                                        "` column: "
                                                        col)))
