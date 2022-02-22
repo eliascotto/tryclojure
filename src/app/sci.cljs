@@ -50,3 +50,5 @@
            (throw (if sci-error?
                     (or (ex-cause e) e)
                     e))))))
+
+(sci/eval-form @context '(require '[clojure.repl :refer [find-doc doc apropos dir]]))
