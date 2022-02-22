@@ -35,6 +35,7 @@
   code {
     @apply text-xs
            border
+           whitespace-nowrap
            border-gray-300
            dark:border-slate-500
            text-red-600
