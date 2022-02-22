@@ -50,12 +50,11 @@
    [:p {:class ["text-sm" "text-gray-700" "dark:text-gray-500" "text-center"
                 "italic" "mb-4"]}
     "Created with Clojurescript by "
-    [:a {:href "https://scotto.me" :target "_blank"}
-     "Elia Scotto"]
-    " ("
     [:a {:href "https://twitter.com/elia_scotto" :target "_blank"}
      "@elia_scotto"]
-    ")"
-    ", thanks to the amazing Clojure "
+    ", thanks to " 
+    [:a {:href "https://twitter.com/borkdude" :target "_blank"}
+     "@borkdude"]
+    " and the amazing Clojure "
     [:a {:href "https://clojure.org/community/resources" :target "_blank"}
      "community"] "."]])
