@@ -35,6 +35,7 @@
   code {
     @apply text-xs
            border
+           inline-block
            whitespace-nowrap
            border-gray-300
            dark:border-slate-500
@@ -47,6 +48,7 @@
            bg-gray-200
            dark:bg-slate-700
            px-1
+           mt-1
            mx-1;
   }
 }
