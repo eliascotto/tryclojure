@@ -122,10 +122,7 @@
              ".")))))
 
 ;; Initialize an internal print funcion
-(sci/set-print-fn (fn [s]
-                    (if (fn? s)
-                      "<function>"
-                      (write-repl! s))))
+(sci/set-print-fn (fn [s] (write-repl! s)))
 
 ;; Append the start-tutorial function as 'start
 (sci/extend-ctx {:namespaces {'user {'start start-tutorial
@@ -158,14 +155,6 @@
              (println "HUUUUUUU")
              (inc-step!))
            (catch :default _)))))
-
-(defn format-output
-  "Return formatted output for REPL print."
-  [out]
-  (cond
-    (nil? out) "nil"
-    (string? out) (str "\"" out "\"")
-    :else (str out)))
 
 (defn input-command
   "Return the entire command typed into the REPL.
@@ -202,7 +191,7 @@
       (write-input! in)
       (let [cmd (input-command)]
         (try (let [out (sci/eval-string cmd)
-                   out-str (format-output out)]
+                   out-str (pr-str out)]
                (check-tutorial-test out)
                (debug "output: " out)
                (reset! repl-input nil)
