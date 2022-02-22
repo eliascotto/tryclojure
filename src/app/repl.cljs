@@ -310,6 +310,11 @@
                         "px-2"
                         "outline-none"
                         "bg-transparent"]
+                :type "text"
+                :autoComplete "off"
+                :autoCorrect "off"
+                :autoCapitalize "off"
+                :spellCheck "false"
                 :placeholder @input-placeholder
                 :ref #(reset! input-el %)
                 :value @repl-input
