@@ -217,7 +217,7 @@
                        (reset! repl-multiline cmd)
                        (reset! input-placeholder (str "Expected demiliter `"
                                                        delimiter
-                                                       " column: "
+                                                       "` column: "
                                                        col)))
                      :else
                      (do (reset! repl-input nil)
