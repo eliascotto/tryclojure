@@ -27,7 +27,7 @@
      create lists using `list` or prepending `'`.
 
   Create a list of elements for example `(list 1 2 3)` or `'(1 2 3)`."
-    :test #(= % '(1 2 3))}
+    :test #(list? %)}
    ;; Math
    {:title "Math is (fun)"
     :content
