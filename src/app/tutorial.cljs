@@ -79,7 +79,7 @@
     "Congratulations, you have called a function and changed the state of the application! 
      And the entire command was… a list!
                                                                                      
-  Clojure offers multiple functions to work with lists, as `reverse`. It reverse a collection
+  Clojure offers multiple functions to work with lists, such as `reverse`. It reverse a collection
      so if you pass a string will use it as a collection of characters.
      
   Type `(reverse \"a-long-string\")` to advance at the next step."
