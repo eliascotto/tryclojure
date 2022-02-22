@@ -299,8 +299,7 @@
                     "p-3"
                     "-my-8"
                     "shadow-2xl"]
-            :ref #(reset! container-el %)
-            :on-click focus-input}
+            :ref #(reset! container-el %)}
       [history-view]
       [:div {:class ["flex" "flex-row" "pl-2"]}
        (if (empty? @repl-multiline)
