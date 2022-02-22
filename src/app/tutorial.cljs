@@ -12,7 +12,7 @@
     "> Learn the principle, abide by the principle, and dissolve the principle. - Bruce Lee
      
   Let's start with the basic. Clojure offers the most common data types, like integers,
-     boolean and strings. Strings are surrounded by `\"`.
+     booleans and strings. Strings are surrounded by `\"`.
     
   Try creating a string saying *hello* to the *world*, as `\"Hello World\"`"
     :test #(= (string/lower-case %) "hello world")}
@@ -32,7 +32,7 @@
    {:title "Math is (fun)"
     :content
     "In Clojure mathematical operators are like normal functions. 
-     As you already know, you have to include them in parenthesis `(...)`.
+     As you already know, you have to include them in parentheses `(...)`.
   
   So instead of `4 + 2` you will do `(+ 4 2)`. Try to type a numerical operation with `+-/*`."
     :test #(number? %)}
@@ -89,7 +89,7 @@
     :content
     "> Lisp is worth learning for the profound enlightenment experience you will have when you finally get it. - Eric Raymond
      
-  **Vectors** (aka arrays), contains sequential elements and they have a faster access compared to lists.
+  **Vectors** (aka arrays) contain sequential elements and they have a faster access compared to lists.
      
   To create a vector you need to include the items into squared brackets `[]` without any separator.
      
@@ -129,7 +129,7 @@
    ;; F-list
    {:title "First of list"
     :content
-    "Clojure offer some functions to extract content from the list. For example 
+    "Clojure offers some functions to extract content from the list. For example, 
      `first` returns the first element.
      
   Type `(first '(\"alpha\" \"bravo\" \"charlie\"))` to get the first element."
@@ -137,7 +137,7 @@
    ;; Range
    {:title "Range of N"
     :content
-    "Clojure function `range` create a list of number from 0 to `n`. 
+    "The Clojure function `range` creates a list of numbers from 0 to `n`. 
      So `(range 5)` will return numbers from 0 to 5.
      
   Create a range from 0 to 99 or click on `(range 100)` :)."
@@ -145,7 +145,7 @@
    ;; Filter
    {:title "Filter a list"
     :content
-    "We can apply functions to a list. For example using `filter` we can remove
+    "We can apply functions to a list. For example, using `filter` we can remove
      all the elements that are not respecting our condition.
      
   Try to remove all the *even* numbers from 0 to 50. Psst, `(filter odd? (range 50))`"
@@ -153,11 +153,11 @@
    ;; Map
    {:title "Apply functions on lists"
     :content
-    "If we want a list of multiple of 11 less than 100 the process to find them
-     is to take each numbers from 1 to 9, multiply it by 10 and add it to the number, as
+    "If we want a list of multiples of 11 less than 100, the process to find them
+     is to take each number from 1 to 9, multiply it by 10 and add it to the number, as
      `5 * 10 + 5 = 55`. We can do the same thing with Clojure using `map`.
 
-  `map` simply apply a function to every element of a list. 
+  `map` simply applies a function to every element of a list. 
      
   So use `(map (fn [n] (+ n (* n 10))) (range 1 10))` to do it."
     :test #(= % (map (fn [n] (+ n (* n 10))) (range 1 10)))}
@@ -168,7 +168,7 @@
       to `map`. I'm referring to `(fn [n] (+ n (* n 10)))`. This technique is useful to create
       functions as *generic utilities* and not write them for a specific use case.
       
-  Now create a function that take `l` and `b` and returns the perimeter of a rectangle:
+  Now create a function that takes `l` and `b` and returns the perimeter of a rectangle:
       
   `(fn [l b] (* (+ l b) 2))`."
      :test #(= (apply % [2 3]) 10)}
@@ -177,8 +177,8 @@
     :content
     "> The only way to learn a new programming language is by writing programs in it. - Kernighan and Ritchie
      
-  You’re currently solving a list of problems by typing and testing code into the REPL. 
-     That’s exactly what a Clojurist does! It's faster to test your code while typing more than compile and debug it later!
+  You’re currently solving a list of problems by typing code into the REPL and testing it. 
+     That’s exactly what a Clojurist does! It's faster to test your code while typing than compiling and debugging it later!
      
   But Clojure is much more than this. Type `(more)` to go to the last step."
     :test #(true? %)}
@@ -186,7 +186,7 @@
      :content
      "> In the beginner’s mind there are many possibilities, but in the expert’s there are few - Zen Mind, Beginner's Mind
       
-  Clojure is **not** as difficult as it seems. Parenthesis, functions, immutable data structures and the REPL
+  Clojure is **not** as difficult as it seems. Parentheses, functions, immutable data structures and the REPL
       will become your friends. Just keep a beginner's mind!
       
   Some good resources to start are [Clojure koans](http://clojurekoans.com/) and [4Clojure](https://4clojure.oxal.org/).
