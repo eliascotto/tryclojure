@@ -189,7 +189,7 @@
   Clojure is **not** as difficult as it seems. Parentheses, functions, immutable data structures and the REPL
       will become your friends. Just keep a beginner's mind!
       
-  Some good resources to start are [Clojure koans](http://clojurekoans.com/) and [4Clojure](https://4clojure.oxal.org/).
+  Some good resources to start are [Clojure koans](http://clojurekoans.com/), [4Clojure](https://4clojure.oxal.org/) or [exercism](https://exercism.org/tracks/clojure).
 
   Ask the community for support, good luck!"
      :test #(true? false)}])
