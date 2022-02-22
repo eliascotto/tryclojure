@@ -165,7 +165,7 @@
     {:title "Inline functions"
      :content
      "In the previous step, we wrote an inline function and passed it as argument
-      to `map`. I'm referring to `(fn [n] (+ n (* n 10)))`. This technique is usefull to create
+      to `map`. I'm referring to `(fn [n] (+ n (* n 10)))`. This technique is useful to create
       functions as *generic utilities* and not write them for a specific use case.
       
   Now create a function that take `l` and `b` and returns the perimeter of a rectangle:
