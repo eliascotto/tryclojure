@@ -170,7 +170,7 @@
     (->> (str @repl-multiline @repl-input)
          (reset! repl-multiline))))
 
-(defn write-input! 
+(defn write-input!
   "Append the current input to the respective atom."
   [in]
   (if (empty? @repl-multiline)
@@ -191,9 +191,10 @@
       (write-input! in)
       (let [cmd (input-command)]
         (try (let [out (sci/eval-string cmd)
-                   out-str (pr-str out)]
+                   out-str (binding [*print-length* 20]
+                             (pr-str out))]
                (check-tutorial-test out)
-               (debug "output: " out)
+               (debug "output: " out-str)
                (reset! repl-input nil)
                (reset! repl-multiline nil)
                (reset! input-placeholder nil)
