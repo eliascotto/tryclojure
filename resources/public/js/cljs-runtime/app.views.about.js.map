@@ -1,0 +1,1 @@
+{"version":3,"sources":["app/views/about.cljs"],"mappings":";AAEA,uBAAA,vBAAMA;AAAN,AAAA,0FAAA,mDAAA","names":["app.views.about/view"],"sourcesContent":["(ns app.views.about)\n\n(defn view []\n  [:div \"about\"])\n"]}

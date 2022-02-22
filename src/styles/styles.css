@@ -1,0 +1,51 @@
+@import url("https://rsms.me/inter/inter.css");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  pre {
+    @apply mb-2;
+  }
+  p {
+    @apply xl:my-3
+           lg:my-2;
+  }
+  blockquote {
+    @apply xl:py-2
+           lg:py-1
+           pl-5
+           pr-2
+           xl:my-6
+           lg:my-5
+           border-l-8
+           border-slate-500
+           bg-gray-300
+           dark:bg-slate-700
+           italic
+           text-gray-700
+           dark:text-gray-200;
+  }
+  a {
+    @apply dark:text-gray-400
+           text-gray-800
+           font-semibold;
+  }
+  code {
+    @apply text-xs
+           border
+           border-gray-300
+           dark:border-slate-500
+           text-red-600
+           dark:text-yellow-500
+           border-solid
+           font-mono
+           py-1
+           rounded-md
+           bg-gray-200
+           dark:bg-slate-700
+           px-1
+           mx-1;
+  }
+}

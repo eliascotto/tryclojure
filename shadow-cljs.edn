@@ -1,0 +1,11 @@
+{:deps {:aliases [:dev]}
+ :dev-http {8000 "resources/public"}
+
+ :builds
+ {:app {:target :browser
+        :output-dir "resources/public/js"
+        :asset-path "/js"
+        :module-hash-names true
+        :modules {:app {:entries [app.core]}}
+        :dev {:closure-defines {app.env/DEBUG true}}
+        :build-hooks [(shadow.cljs.build-report/hook)]}}}

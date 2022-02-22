@@ -1,0 +1,9 @@
+{
+"version":3,
+"file":"goog.disposable.dispose.js",
+"lineCount":13,
+"mappings":"AAWA,IAAA,CAAA,UAAA,CAAA,QAAA,CAAA,OAAA,CAAA;AAAA,cAAA;AAAAA,MAAKC,CAAAA,MAAL,CAAY,cAAZ,CAAA;AACAD,MAAKC,CAAAA,MAAOC,CAAAA,sBAAZ,EAAA;AAOAC,UAASA,QAAO,CAACC,GAAD,CAAM;AACpB,QAAIA,GAAJ,IAAW,MAAOA,IAAID,CAAAA,OAAtB,IAAiC,UAAjC;AACEC,SAAID,CAAAA,OAAJ,EAAA;AADF;AADoB;AAKtBE,SAAA,GAAUF,OAAV;AAbA,SAAA,OAAA;AAAA,CAAA,CAAA;;",
+"sources":["goog/disposable/dispose.js"],
+"sourcesContent":["/**\n * @license\n * Copyright The Closure Library Authors.\n * SPDX-License-Identifier: Apache-2.0\n */\n\n/**\n * @fileoverview The dispose method is used to clean up references and\n * resources.\n */\n\ngoog.module('goog.dispose');\ngoog.module.declareLegacyNamespace();\n\n/**\n * Calls `dispose` on the argument if it supports it. If obj is not an\n *     object with a dispose() method, this is a no-op.\n * @param {*} obj The object to dispose of.\n */\nfunction dispose(obj) {\n  if (obj && typeof obj.dispose == 'function') {\n    obj.dispose();\n  }\n}\nexports = dispose;\n"],
+"names":["goog","module","declareLegacyNamespace","dispose","obj","exports"]
+}

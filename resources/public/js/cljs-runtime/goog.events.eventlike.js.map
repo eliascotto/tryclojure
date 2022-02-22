@@ -1,0 +1,9 @@
+{
+"version":3,
+"file":"goog.events.eventlike.js",
+"lineCount":5,
+"mappings":"AAUAA,IAAKC,CAAAA,OAAL,CAAa,uBAAb,CAAA;AAEAD,IAAKE,CAAAA,WAAL,CAAiB,mBAAjB,CAAA;AACAF,IAAKE,CAAAA,WAAL,CAAiB,qBAAjB,CAAA;AAUAF,IAAKG,CAAAA,MAAOC,CAAAA,SAAZ;;",
+"sources":["goog/events/eventlike.js"],
+"sourcesContent":["/**\n * @license\n * Copyright The Closure Library Authors.\n * SPDX-License-Identifier: Apache-2.0\n */\n\n/**\n * @fileoverview A typedef for event like objects that are dispatchable via the\n * goog.events.dispatchEvent function.\n */\ngoog.provide('goog.events.EventLike');\n\ngoog.requireType('goog.events.Event');\ngoog.requireType('goog.events.EventId');\n\n/**\n * A typedef for event like objects that are dispatchable via the\n * goog.events.dispatchEvent function. strings are treated as the type for a\n * goog.events.Event. Objects are treated as an extension of a new\n * goog.events.Event with the type property of the object being used as the type\n * of the Event.\n * @typedef {string|Object|goog.events.Event|goog.events.EventId}\n */\ngoog.events.EventLike;\n"],
+"names":["goog","provide","requireType","events","EventLike"]
+}
