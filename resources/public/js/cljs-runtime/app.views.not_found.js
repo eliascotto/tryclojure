@@ -1,6 +1,0 @@
-goog.provide('app.views.not_found');
-app.views.not_found.view = (function app$views$not_found$view(){
-return new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"div","div",1057191632),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"class","class",-2030961996),new cljs.core.PersistentVector(null, 7, 5, cljs.core.PersistentVector.EMPTY_NODE, ["h-full","w-full","dark:bg-slate-900","flex","flex-col","items-center","justify-center"], null)], null),new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"h1","h1",-1896887462),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"class","class",-2030961996),new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, ["lg:text-8xl","text-5xl","dark:text-white","my-6"], null)], null),"404"], null),new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"a","a",-2123407586),new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"class","class",-2030961996),cljs.core.PersistentVector.EMPTY,new cljs.core.Keyword(null,"href","href",-793805698),"#/"], null),"Go home"], null)], null);
-});
-
-//# sourceMappingURL=app.views.not_found.js.map

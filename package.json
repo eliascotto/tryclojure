@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "description": "Try Clojure in a web REPL!",
   "author": "Elia Scotto [@elias94]",
+  "homepage": "https://github.com/elias94/tryclojure",
   "scripts": {
     "start": "npx shadow-cljs -d cider/cider-nrepl:0.27.4 watch :app",
     "styles-watch": "npx tailwindcss -i src/styles/styles.css -o resources/public/css/styles.css --watch",
+    "styles": "npx tailwindcss -i src/styles/styles.css -o resources/public/css/styles.css",
+    "build": "npx shadow-cljs release :app && npm run styles",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {

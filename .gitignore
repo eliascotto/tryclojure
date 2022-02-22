@@ -21,3 +21,5 @@ profiles.clj
 *file
 /src/gen/
 /.cpcache
+/resources/public/js/*
+/resources/public/css/*

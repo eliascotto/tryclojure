@@ -1,1 +1,0 @@
-{"version":3,"sources":["sci/impl/unrestrict.cljc"],"mappings":";AAGA,+CAAA,/CAAeA","names":["sci.impl.unrestrict/*unrestricted*"],"sourcesContent":["(ns sci.impl.unrestrict\n  {:no-doc true})\n\n(def ^:dynamic *unrestricted* false)\n"]}

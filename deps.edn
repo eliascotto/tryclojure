@@ -1,9 +1,7 @@
 {:paths ["src" "resources"]
  
  :deps
- {alandipert/storage-atom {:mvn/version "2.0.1"}
-  applied-science/js-interop {:mvn/version "0.3.1"}
-  markdown-clj/markdown-clj {:mvn/version "1.10.8"}
+ {markdown-clj/markdown-clj {:mvn/version "1.10.8"}
   metosin/reitit {:mvn/version "0.5.16"}
   org.babashka/sci {:mvn/version "0.3.0"}
   reagent/reagent {:mvn/version "1.1.0"}}
