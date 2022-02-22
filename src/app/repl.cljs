@@ -1,17 +1,19 @@
 (ns app.repl
   (:require
-   [clojure.string :as string]
-   [reagent.core :as r]
-   [app.sci :as sci]
-   [app.utils :as utils :refer [get-val in?]]
    [app.env :refer [debug DEBUG]]
+   [app.sci :as sci]
    [app.session :as session]
-   [app.tutorial :refer [tutorial]]))
+   [app.tutorial :refer [tutorial]]
+   [app.utils :as utils :refer [get-val in?]]
+   [clojure.string :as string]
+   [reagent.core :as r]))
+
+(def default-hint "Type your Clojure symbolic expressions here")
 
 ;; Collection of map with the REPL command history.
 (defonce repl-history
   (r/atom [{:type :special
-            :value "Type your Clojure symbolic expressions here"}]))
+            :value default-hint}]))
 
 ;; Store the REPL input while typed in the input el
 (defonce repl-input (r/atom nil))
@@ -19,13 +21,16 @@
 ;; Store a multiline command as a single string
 (defonce repl-multiline (r/atom nil))
 
+;; Expected delimiter in case of incomplete input
+(defonce repl-expected-delimiter (r/atom nil))
+
 (defn write-repl!
   "Append `s` to the REPL history.
   Optional keyword `k` to use as a type."
   ([s]
    (write-repl! s :output))
   ([s k]
-   (swap! repl-history concat [{:type k :value s}])))
+   (swap! repl-history conj {:type k :value s})))
 
 (defn inc-step!
   "Increment the current tutorial steps."
@@ -157,6 +162,9 @@
     (write-repl! in :input)
     (write-repl! in :input-multi)))
 
+(defn set-hint! [msg]
+  (swap! repl-history assoc-in [0 :value] msg))
+
 (defn on-keydown
   "Onkeydown event for the REPL input; Evaluate the string
   using SCI and add the output/error to the REPL. Manage
@@ -177,14 +185,19 @@
                (reset! repl-input nil)
                (reset! repl-multiline nil)
                ;; Append to history
-               (write-repl! out-str))
+               (write-repl! out-str)
+               (set-hint! default-hint))
              (catch :default e
                (cond (string/includes? (.-message e) "EOF while reading")
                      (do (reset! repl-input nil)
-                         (reset! repl-multiline cmd))
+                         (reset! repl-multiline cmd)
+                         (if-let [expected (:edamame/expected-delimiter (ex-data e))]
+                           (set-hint! (str "Expected a closing: " expected))
+                           (set-hint! "")))
                      :else
                      (do (reset! repl-input nil)
                          (reset! repl-multiline nil)
+                         (reset! repl-expected-delimiter nil)
                          ;; Append error to history
                          (write-repl! (.-message e) :error)))))))
     ;; Arrow Up

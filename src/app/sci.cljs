@@ -1,8 +1,8 @@
 (ns app.sci
   (:refer-clojure :exclude [time])
   (:require
-   [sci.core :as sci]
-   [app.error :as error]))
+   [app.error :as error]
+   [sci.core :as sci]))
 
 (clojure.core/defmacro time
   "Evaluates expr and prints the time it took. Returns the value of expr."
