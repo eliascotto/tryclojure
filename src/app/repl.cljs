@@ -33,7 +33,7 @@
   ([s]
    (write-repl! s :output))
   ([s k]
-   (swap! repl-history concat [{:type k :value s}])))
+   (swap! repl-history conj {:type k :value s})))
 
 (defn inc-step!
   "Increment the current tutorial steps."
@@ -173,15 +173,15 @@
 (defn input-command
   "Return the entire command typed into the REPL.
   Update the repl-multiline in case."
-  []
-  (if (empty? @repl-multiline) @repl-input @repl-multiline))
+  [in]
+  (if (empty? @repl-multiline) in @repl-multiline))
 
 (defn update-multiline!
   "If `repl-multiline` is not empty, append `repl-input` value
   to it."
-  []
+  [in]
   (when (not-empty @repl-multiline)
-    (->> (str @repl-multiline @repl-input)
+    (->> (str @repl-multiline in)
          (reset! repl-multiline))))
 
 (defn write-input!
@@ -191,7 +191,7 @@
     (write-repl! in :input)
     (write-repl! in :input-multi)))
 
-(defn reset-input
+(defn reset-input!
   "Reset both the atom and the input value
   to avoid on-change event wrong behaviour."
   []
@@ -207,36 +207,37 @@
   (let [in @repl-input]
     ;; Enter
     (when (and (= (.-key e) "Enter") (not-empty in))
-      (debug "input: " in)
-      (update-multiline!)
-      (write-input! in)
-      (let [cmd (input-command)]
-        (try (let [out (sci/eval-string cmd)
-                   out-str (binding [*print-length* 20]
-                             (pr-str out))]
-               (check-tutorial-test out)
-               (debug "output: " out-str)
-               (reset! repl-multiline nil)
-               (reset! input-placeholder nil)
-               ;; Append to history
-               (write-repl! out-str))
-             (catch :default e
-               (debug "error" (ex-data e))
-               (cond (string/includes? (.-message e) "EOF while reading")
-                     (let [err-data (ex-data e)
-                           delimiter (:edamame/expected-delimiter err-data)
-                           col (:column err-data)]
-                       (reset! repl-multiline cmd)
-                       (reset! input-placeholder (str "Expected delimiter `"
-                                                      delimiter
-                                                      "` column: "
-                                                      col)))
-                     :else
-                     (do (reset! repl-multiline nil)
-                         (reset! input-placeholder nil)
-                         ;; Append error to history
-                         (write-repl! (.-message e) :error)))))
-        (reset-input)))
+      (let [in (str in \newline)]
+        (debug "input: " (pr-str in))
+        (update-multiline! in)
+        (write-input! in)
+        (let [cmd (input-command in)]
+          (try (let [out (sci/eval-string cmd)
+                     out-str (binding [*print-length* 20]
+                               (pr-str out))]
+                 (check-tutorial-test out)
+                 (debug "output: " out-str)
+                 (reset! repl-multiline nil)
+                 (reset! input-placeholder nil)
+                 ;; Append to history
+                 (write-repl! out-str))
+               (catch :default e
+                 (debug "error" (ex-data e))
+                 (cond (string/includes? (.-message e) "EOF while reading")
+                       (let [err-data (ex-data e)
+                             delimiter (:edamame/expected-delimiter err-data)
+                             col (:column err-data)]
+                         (reset! repl-multiline cmd)
+                         (reset! input-placeholder (str "Expected delimiter `"
+                                                        delimiter
+                                                        "` column: "
+                                                        col)))
+                       :else
+                       (do (reset! repl-multiline nil)
+                           (reset! input-placeholder nil)
+                           ;; Append error to history
+                           (write-repl! (.-message e) :error))))))
+        (reset-input!)))
     ;; Arrow Up
     (when (= (.-key e) "ArrowUp")
       (let [inputs (filter #(= (:type %) :input) @repl-history)
