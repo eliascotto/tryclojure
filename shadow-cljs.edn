@@ -7,5 +7,5 @@
         :asset-path "/js"
         :module-hash-names false
         :modules {:app {:entries [app.core]}}
-        :dev {:closure-defines {app.env/DEBUG true}}
+        :dev {:closure-defines {app.env/DEBUG false}}
         :build-hooks [(shadow.cljs.build-report/hook)]}}}
