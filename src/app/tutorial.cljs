@@ -71,7 +71,7 @@
   You can call functions with keywords parameters, as `(create-dog :name \"Zeus\" :breed \"Beagle\")`
      
   Use the function `(set-prompt)` and set a color. It accepts optionally `:color` and `:text` as strings. 
-     On click on `(set-prompt :color \"red\")`"
+     Or click on `(set-prompt :color \"red\")`"
     :test #(contains? % :prompt-color)}
    ;; 
    {:title "Functional practicioner!"
