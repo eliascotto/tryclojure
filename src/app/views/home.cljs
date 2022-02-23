@@ -2,7 +2,7 @@
   (:require
    [reagent.core :as r]
    [clojure.string :as string]
-   [app.repl :as repl :refer [repl-el]]
+   [app.repl.core :as repl]
    [markdown.core :refer [md->html]]
    [app.session :as session]
    [app.tutorial :refer [tutorial]]))
@@ -60,31 +60,35 @@ Type `(start)` when you're ready!")
 ;; Views
 ;; -------------------------
 
+(defn- handle-tutorial-click
+  "When user click of `code` DOM node, fill the REPL input
+  with the code content and focus on it."
+  [e]
+  (let [target (.-target e)
+        node-name (.-nodeName target)]
+    (when (= node-name "CODE")
+      (->> (.-textContent target)
+           (reset! repl/repl-input))
+      (repl/focus-input))))
+
 (defn tutorial-view [[title content]]
-  (r/with-let [click-fn (fn [e]
-                          (let [target (.-target e)
-                                node-name (.-nodeName target)]
-                            (when (= node-name "CODE")
-                              (->> (.-textContent target)
-                                   (reset! repl/repl-input))
-                              (repl/focus-input))))]
-    [:div {:class ["bg-gray-200"
-                   "text-black"
-                   "dark:text-white"
-                   "dark:bg-gray-800"
-                   "shadow-lg"
-                   "sm:rounded-l-md"
-                   "xs:rounded-t-md"
-                   "w-full"
-                   "md:p-8"
-                   "p-6"
-                   "min-h-[200px]"
-                   "opacity-95"]
-           :on-click click-fn}
-     [:h1 {:class ["text-3xl" "mb-4" "font-bold" "tracking-tight"]}
-      title]
-     [:div {:class ["leading-relaxed" "last:pb-0"]
-            :dangerouslySetInnerHTML #js{:__html (parse-md content)}}]]))
+  [:div {:class ["bg-gray-200"
+                 "text-black"
+                 "dark:text-white"
+                 "dark:bg-gray-800"
+                 "shadow-lg"
+                 "sm:rounded-l-md"
+                 "xs:rounded-t-md"
+                 "w-full"
+                 "md:p-8"
+                 "p-6"
+                 "min-h-[200px]"
+                 "opacity-95"]
+         :on-click handle-tutorial-click}
+   [:h1 {:class ["text-3xl" "mb-4" "font-bold" "tracking-tight"]}
+    title]
+   [:div {:class ["leading-relaxed" "last:pb-0"]
+          :dangerouslySetInnerHTML #js{:__html (parse-md content)}}]])
 
 (defn view []
   [:div {:class ["flex"
@@ -105,4 +109,4 @@ Type `(start)` when you're ready!")
                   "mt-7"
                   "sm:mb-0"
                   "mb-14"]}
-    [repl-el]]])
+    [repl/view]]])

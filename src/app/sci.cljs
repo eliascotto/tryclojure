@@ -4,7 +4,7 @@
    [sci.core :as sci]
    [app.error :as error]))
 
-(clojure.core/defmacro time
+(clojure.core/defmacro ^:private time
   "Evaluates expr and prints the time it took. Returns the value of expr."
   [expr]
   `(let [start# (cljs.core/system-time)
@@ -14,9 +14,9 @@
                          " msecs"))
      ret#))
 
-(def clj-ns (sci/create-ns 'clojure.core nil))
+(def ^:private clj-ns (sci/create-ns 'clojure.core nil))
 
-(def namespaces
+(def ^:private namespaces
   {'clojure.core
    {'time (sci/copy-var time clj-ns)
     'system-time (sci/copy-var system-time clj-ns)}})
@@ -27,7 +27,7 @@
                     :namespaces namespaces})
 
 ;; Sci context inside an atom
-(defonce context (atom (sci/init init-opts)))
+(defonce ^:private context (atom (sci/init init-opts)))
 
 (defn set-print-fn
   "Setup a custom `print-fn` for sci."

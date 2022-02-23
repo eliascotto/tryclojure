@@ -1,13 +1,13 @@
-(ns app.repl
+(ns app.repl.core
   (:require
    [clojure.string :as string]
    [reagent.core :as r]
    [app.sci :as sci]
-   [app.utils :as utils :refer [get-val in?]]
+   [app.utils :as utils :refer [in?]]
    [app.env :refer [debug DEBUG]]
    [app.session :as session]
    [app.tutorial :refer [tutorial]]
-   [app.keybind :as keybind]))
+   [app.repl.view :refer [repl-view]]))
 
 ;; Collection of map with the REPL command history.
 (defonce repl-history
@@ -20,20 +20,27 @@
 ;; Store a multiline command as a single string
 (defonce repl-multiline (r/atom nil))
 
-;; Set a command input placeholder in case of EOF error
-(defonce input-placeholder (r/atom nil))
-
 ;; External to the component because needs to be used by
 ;; the focus function
 (defonce input-el (r/atom nil))
 
-(defn write-repl!
+;; Set a command input placeholder in case of EOF error
+(defonce input-placeholder (r/atom nil))
+
+(defn- write-repl!
   "Append `s` to the REPL history.
   Optional keyword `k` to use as a type."
   ([s]
    (write-repl! s :output))
   ([s k]
    (swap! repl-history conj {:type k :value s})))
+
+(defn tutorial-active? []
+  (true? (session/get :tutorial)))
+
+;; -------------------------
+;; SCI utils
+;; -------------------------
 
 (defn inc-step!
   "Increment the current tutorial steps."
@@ -49,9 +56,6 @@
   []
   (session/dec! :step)
   nil)
-
-(defn tutorial-active? []
-  (true? (session/get :tutorial)))
 
 (defn print-help
   "Print helper to screen."
@@ -69,10 +73,6 @@
     (doseq [s help-str]
       (write-repl! s)))
   nil)
-
-;; -------------------------
-;; SCI utils
-;; -------------------------
 
 (defn start-tutorial
   "Start the tutorial setting the initial step into the session."
@@ -99,7 +99,9 @@
     (session/set! :user-name s)
     {:user-name s}))
 
-(defn set-step [step]
+(defn set-step
+  "Navigate the tutorial to a specific step."
+  [step]
    (session/set! :step step))
 
 (defn set-prompt
@@ -157,7 +159,7 @@
 ;; REPL element
 ;; -------------------------
 
-(defn check-tutorial-test
+(defn- check-tutorial-test
   "Check if the sci output pass the test function.
   If it does, increase the tutorial step."
   [out]
@@ -170,13 +172,13 @@
              (inc-step!))
            (catch :default _)))))
 
-(defn input-command
+(defn- input-command
   "Return the entire command typed into the REPL.
   Update the repl-multiline in case."
   [in]
   (if (empty? @repl-multiline) in @repl-multiline))
 
-(defn update-multiline!
+(defn- update-multiline!
   "If `repl-multiline` is not empty, append `repl-input` value
   to it."
   [in]
@@ -184,21 +186,21 @@
     (->> (str @repl-multiline in)
          (reset! repl-multiline))))
 
-(defn write-input!
+(defn- write-input!
   "Append the current input to the respective atom."
   [in]
   (if (empty? @repl-multiline)
     (write-repl! in :input)
     (write-repl! in :input-multi)))
 
-(defn reset-input!
+(defn- reset-input!
   "Reset both the atom and the input value
   to avoid on-change event wrong behaviour."
   []
   (reset! repl-input nil)
   (set! (.-value @input-el) ""))
 
-(defn on-keydown
+(defn- handle-keydown
   "Onkeydown event for the REPL input; Evaluate the string
   using SCI and add the output/error to the REPL. Manage
   the last command using arrow-up and a basic multiline
@@ -244,97 +246,17 @@
             last-in (last inputs)]
         (reset! repl-input (:value last-in))))))
 
-(defn prompt
-  "Render the prompt element, extracting color and text
-  from the session."
+(defn focus-input
+  "Focus on REPL input element."
   []
-  (let [color (session/get :prompt-color)
-        text (session/get :prompt-text)]
-    [:span {:class [(or color "text-amber-500 dark:text-amber-400")]}
-     (or text "=>")]))
-
-(defn history-view
-  "Render a list of div containing the command history
-  of the REPL."
-  []
-  [:<>
-   (for [[index {:keys [type value]}] (map-indexed vector @repl-history)]
-     ^{:key (str "repl-part-" index)}
-     [:div {:class ["pl-2" (when (= type :special) "mt-1 mb-2")]}
-      ;; Show prompt if item is input
-      (condp = type
-        :input [prompt]
-        :input-multi [:span ">"]
-        nil)
-      [:span {:class ["px-2"
-                      (when (= type :error) "text-red-400")
-                      (when (= type :special) "text-gray-500 italic")]}
-       value]])])
-
-(defn scroll-bottom
-  "Scroll DOM element `el` to the bottom."
-  [el _]
-  (when el
-    ;; Push the callback at the bottom of the call stack
-    (js/setTimeout
-     #(set! (.-scrollTop el) (.-scrollHeight el))
-     0)))
-
-(defn focus-input []
   (.focus @input-el))
 
-(defn repl-el []
-  (r/with-let [container-el (r/atom nil)
-               has-focus (r/atom false)
-               ;; Include repl-history to track any change to the atom
-               ;; and scroll to the bottom when new items are added
-               scroll-watch (r/track! #(scroll-bottom
-                                        @container-el
-                                        @repl-history))]
-    [keybind/with-keybind {:ctrl-c (fn [e]
-                                    (reset! repl-input nil)
-                                    (reset! repl-multiline nil)
-                                    (reset! input-placeholder nil)
-                                    (.preventDefault e))}
-     [:div {:class ["border"
-                    "border-gray-300"
-                    "dark:border-0"
-                    "rounded-md"
-                    "bg-white"
-                    "dark:bg-slate-800"
-                    "font-mono"
-                    "text-sm"
-                    "text-black"
-                    "dark:text-white"
-                    "sm:h-[500px]"
-                    "h-[200px]"
-                    "xl:max-w-[618px]"
-                    "lg:max-w-[518px]"
-                    "md:max-w-[350px]"
-                    "overflow-auto"
-                    "p-3"
-                    "-my-8"
-                    "shadow-2xl"]
-            :ref #(reset! container-el %)}
-      [history-view]
-      [:div {:class ["flex" "flex-row" "pl-2"]}
-       (if (empty? @repl-multiline)
-         [prompt]
-         [:span ">"])
-       [:input {:class ["flex-1"
-                        "px-2"
-                        "outline-none"
-                        "bg-transparent"]
-                :type "text"
-                :autoComplete "off"
-                :autoCorrect "off"
-                :autoCapitalize "off"
-                :spellCheck "false"
-                :placeholder @input-placeholder
-                :ref #(reset! input-el %)
-                :value @repl-input
-                :on-focus #(reset! has-focus true)
-                :on-blur #(reset! has-focus false)
-                :on-key-down on-keydown
-                :on-change #(reset! repl-input (get-val %))}]]]]
-    (finally (r/dispose! scroll-watch))))
+(defn view []
+  [:<>
+   [repl-view
+    {:input-el input-el
+     :input-placeholder input-placeholder
+     :on-keydown handle-keydown
+     :repl-input repl-input
+     :repl-history repl-history
+     :repl-multiline repl-multiline}]])
