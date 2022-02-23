@@ -34,6 +34,7 @@ To build:
 List of resources to learn more about Clojure.
 
 - [Clojure Distilled](https://yogthos.net/ClojureDistilled.html) is the best introduction to the language.
-- [Learn Clojure in Y minutes](https://learnxinyminutes.com/docs/clojure/)
-- [Clojure By Example](http://kimh.github.io/clojure-by-example)
+- [practicalli](https://practical.li/)
 - [Clojure for the Brave and True](https://www.braveclojure.com/clojure-for-the-brave-and-true/)
+- [Clojure By Example](http://kimh.github.io/clojure-by-example)
+- [Learn Clojure in Y minutes](https://learnxinyminutes.com/docs/clojure/)
