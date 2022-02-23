@@ -91,22 +91,32 @@ Type `(start)` when you're ready!")
           :dangerouslySetInnerHTML #js{:__html (parse-md content)}}]])
 
 (defn view []
-  [:div {:class ["flex"
-                 "sm:flex-row"
-                 "flex-col"
-                 "items-center"
-                 "justify-center"
-                 "xl:-mt-32"
-                 "lg:-mt-8"
-                 "mt-0"]}
-   [:div {:class ["flex-1" "z-0"]}
-    [tutorial-view (compute-step)]]
-   [:div {:class ["flex-1"
-                  "z-10"
-                  "sm:w-auto"
-                  "w-full"
-                  "sm:mt-0"
-                  "mt-7"
-                  "sm:mb-0"
-                  "mb-14"]}
-    [repl/view]]])
+  (r/create-class
+   {:display-name "home-view"
+
+    :component-did-mount
+    (fn []
+      ;; Focus on input after first rendered
+      (repl/focus-input))
+
+    :reagent-render
+    (fn []
+      [:div {:class ["flex"
+                     "sm:flex-row"
+                     "flex-col"
+                     "items-center"
+                     "justify-center"
+                     "xl:-mt-32"
+                     "lg:-mt-8"
+                     "mt-0"]}
+       [:div {:class ["flex-1" "z-0"]}
+        [tutorial-view (compute-step)]]
+       [:div {:class ["flex-1"
+                      "z-10"
+                      "sm:w-auto"
+                      "w-full"
+                      "sm:mt-0"
+                      "mt-7"
+                      "sm:mb-0"
+                      "mb-14"]}
+        [repl/view]]])}))
