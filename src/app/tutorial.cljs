@@ -138,7 +138,7 @@
    {:title "Range of N"
     :content
     "The Clojure function `range` creates a list of numbers from 0 to `n` (excluded). 
-     So `(range 5)` will return numbers from 0 to 5. Use `(doc range)` to print
+     So `(range 5)` will return numbers from 0 to 4. Use `(doc range)` to print
     the documentation. 
      
   Create a range from 0 to 99 or click on `(range 100)` :)."
