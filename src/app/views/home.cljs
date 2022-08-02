@@ -122,10 +122,10 @@ Type `(start)` when you're ready!")
         [repl/view]]])}))
 
 (defn- update-location-of-editor []
-  (let [windowWidth (. js/window -innerWidth)
-        locationOfEditorDom (. js/document getElementById "location-of-editor")]
-    (set! (. locationOfEditorDom -innerHTML)
-          (if (< windowWidth 640) "Down below" "Here on the right"))))
+  (let [window-width (. js/window -innerWidth)
+        location-of-editor-dom (. js/document getElementById "location-of-editor")]
+    (set! (. location-of-editor-dom -innerHTML)
+          (if (< window-width 640) "Down below" "Here on the right"))))
 
 ((. js/window -addEventListener) "load" update-location-of-editor)
 ((. js/window -addEventListener) "resize" update-location-of-editor)
