@@ -13,10 +13,10 @@
 (def intro-content
   "> If you want everything to be familiar, you'll never learn anything new. - Rich Hickey
 
-Let's have some fun! Here on the right you have a **REPL**, a command line
-with a _read-eval-print_ loop. Everything you write will be evaluated. 
-Try to type some expressions as `(+ 1 2)` or click on code to auto insert. 
-   You can type `(help)` for more commands.
+Let's have some fun! <span id=\"location-of-editor\">Here on the right</span>
+you have a **REPL**, a command line with a _read-eval-print_ loop. Everything
+you write will be evaluated. Try to type some expressions as `(+ 1 2)` or click
+on code to auto insert. You can type `(help)` for more commands.
    
 Type `(start)` when you're ready!")
 
@@ -120,3 +120,12 @@ Type `(start)` when you're ready!")
                       "sm:mb-0"
                       "mb-14"]}
         [repl/view]]])}))
+
+(defn- update-location-of-editor []
+  (let [window-width (. js/window -innerWidth)
+        location-of-editor-dom (.getElementById js/document "location-of-editor")]
+    (set! (. location-of-editor-dom -innerHTML)
+          (if (< window-width 640) "Down below" "Here on the right"))))
+
+(.addEventListener js/window "load" update-location-of-editor)
+(.addEventListener js/window "resize" update-location-of-editor)
