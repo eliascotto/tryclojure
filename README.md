@@ -22,7 +22,7 @@ To build:
 
 - [Clojurescript](https://clojurescript.org/)
 - [SCI](https://github.com/babashka/sci)
-- [tailwind](tailwindcss.com/)
+- [tailwind](https://tailwindcss.com/)
 - [shadow-cljs](https://github.com/thheller/shadow-cljs)
 
 ### Inspiration
