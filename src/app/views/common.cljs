@@ -50,7 +50,7 @@
    [:p {:class ["text-sm" "text-gray-700" "dark:text-gray-500" "text-center"
                 "italic" "mb-4"]}
     "Created with Clojurescript by "
-    [:a {:href "https://twitter.com/elia_scotto" :target "_blank"}
+    [:a {:href "https://www.scotto.me" :target "_blank"}
      "@elia_scotto"]
     ", thanks to " 
     [:a {:href "https://twitter.com/borkdude" :target "_blank"}
