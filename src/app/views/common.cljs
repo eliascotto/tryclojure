@@ -51,10 +51,10 @@
                 "italic" "mb-4"]}
     "Created with Clojurescript by "
     [:a {:href "https://www.scotto.me" :target "_blank"}
-     "@elia_scotto"]
+     "Elia Scotto"]
     ", thanks to " 
-    [:a {:href "https://twitter.com/borkdude" :target "_blank"}
-     "@borkdude"]
+    [:a {:href "https://github.com/borkdude" :target "_blank"}
+     "Michiel Borkent"]
     " and the amazing Clojure "
     [:a {:href "https://clojure.org/community/resources" :target "_blank"}
      "community"] "."]])
