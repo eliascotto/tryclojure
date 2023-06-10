@@ -1,12 +1,22 @@
 {:paths ["src" "resources"]
- 
+
  :deps
- {markdown-clj/markdown-clj {:mvn/version "1.10.8"}
-  metosin/reitit {:mvn/version "0.5.16"}
-  org.babashka/sci {:mvn/version "0.3.0"}
-  reagent/reagent {:mvn/version "1.1.0"}
-  thheller/shadow-cljs {:mvn/version "2.17.3"}}
- 
+ {markdown-clj/markdown-clj {:mvn/version "1.11.4"
+                             exclusions [org.yaml/snakeyaml]}
+  metosin/reitit {:mvn/version "0.6.0"}
+  org.babashka/sci {:mvn/version "0.7.39"}
+  reagent/reagent {:mvn/version "1.2.0"}
+  thheller/shadow-cljs {:mvn/version "2.23.3"
+                        :exclusions [commons-fileupload/commons-fileupload
+                                     io.undertow/undertow-core
+                                     org.jboss.xnio/xnio-api
+                                     org.jboss.xnio/xnio-nio]}
+  commons-fileupload/commons-fileupload #:mvn{:version "1.5"}
+  io.undertow/undertow-core #:mvn{:version "2.3.7.Final"}
+  org.jboss.xnio/xnio-api #:mvn{:version "3.8.9.Final"}
+  org.jboss.xnio/xnio-nio #:mvn{:version "3.8.9.Final"}
+  org.yaml/snakeyaml {:mvn/version "2.0"}}
+
  :aliases
  {:dev
-  {:extra-deps {cider/cider-nrepl {:mvn/version "0.28.2"}}}}}
+  {:extra-deps {cider/cider-nrepl {:mvn/version "0.30.0"}}}}}

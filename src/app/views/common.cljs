@@ -52,7 +52,7 @@
     "Created with Clojurescript by "
     [:a {:href "https://www.scotto.me" :target "_blank"}
      "Elia Scotto"]
-    ", thanks to " 
+    ", thanks to "
     [:a {:href "https://github.com/borkdude" :target "_blank"}
      "Michiel Borkent"]
     " and the amazing Clojure "

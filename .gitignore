@@ -24,3 +24,5 @@ profiles.clj
 /resources/public/js/*
 /resources/public/css/*
 .DS_Store
+.vnodeenv/
+.vpyenv/

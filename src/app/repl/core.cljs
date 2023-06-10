@@ -103,7 +103,7 @@
 (defn set-step
   "Navigate the tutorial to a specific step."
   [step]
-   (session/set! :step step))
+  (session/set! :step step))
 
 (defn set-prompt
   "Change the prompt style."
