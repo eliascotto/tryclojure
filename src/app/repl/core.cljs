@@ -207,15 +207,17 @@
   the last command using arrow-up and a basic multiline
   in case of EOF error."
   [e]
-  (let [in @repl-input]
-    ;; Enter
-    (when (and (= (.-key e) "Enter") (not-empty in))
+  (let [in @repl-input
+        key-pressed (.-key e)]
+    (cond
+      ;; Enter pressed with non-empty input
+      (and (= key-pressed "Enter") (not-empty in))
       (let [in (str in \newline)]
-        (debug "input: " (pr-str in))
         (update-multiline! in)
         (write-input! in)
-        (let [cmd (input-command in)]
-          (try (let [out (sci/eval-string cmd)
+        (let [input-cmd (-> (input-command in)
+                            (utils/escape-html))]
+          (try (let [out (sci/eval-string input-cmd)
                      out-str (binding [*print-length* 20]
                                (pr-str out))]
                  (check-tutorial-test out)
@@ -230,7 +232,7 @@
                        (let [err-data (ex-data e)
                              delimiter (:edamame/expected-delimiter err-data)
                              col (:column err-data)]
-                         (reset! repl-multiline cmd)
+                         (reset! repl-multiline input-cmd)
                          (reset! input-placeholder (str "Expected delimiter `"
                                                         delimiter
                                                         "` column: "
@@ -240,17 +242,18 @@
                            (reset! input-placeholder nil)
                            ;; Append error to history
                            (write-repl! (.-message e) :error))))))
-        (reset-input!)))
-    ;; Arrow Up
-    (when (= (.-key e) "ArrowUp")
-      (let [inputs (filter #(= (:type %) :input) @repl-history)
+        (reset-input!))
+
+      ;; Arrow Up
+      (= key-pressed "ArrowUp")
+      (let [inputs  (filter #(= (:type %) :input) @repl-history)
             last-in (last inputs)]
         (reset! repl-input (:value last-in))))))
 
-(defn focus-input
-  "Focus on REPL input element."
-  []
-  (.focus @input-el))
+  (defn focus-input
+    "Focus on REPL input element."
+    []
+    (.focus @input-el))
 
 (defn view []
   [:<>

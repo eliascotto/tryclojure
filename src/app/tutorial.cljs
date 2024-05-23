@@ -192,5 +192,5 @@
       
   Some good resources to start are [Clojure koans](http://clojurekoans.com/), [4Clojure](https://4clojure.oxal.org/) or [exercism](https://exercism.org/tracks/clojure).
 
-  Ask the community for support, good luck!"
-     :test #(true? false)}])
+  Ask the community for support, and good luck!"
+    :test #(true? false)}])

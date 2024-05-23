@@ -59,35 +59,17 @@
                                      (reset! repl-multiline nil)
                                      (reset! input-placeholder nil)
                                      (.preventDefault e))}
-     [:div {:class ["border"
-                    "border-gray-300"
-                    "dark:border-0"
-                    "rounded-md"
-                    "bg-white"
-                    "dark:bg-slate-800"
-                    "font-mono"
-                    "text-sm"
-                    "text-black"
-                    "dark:text-white"
-                    "sm:h-[500px]"
-                    "h-[200px]"
-                    "xl:max-w-[618px]"
-                    "lg:max-w-[518px]"
-                    "md:max-w-[350px]"
-                    "overflow-auto"
-                    "p-3"
-                    "-my-8"
-                    "shadow-2xl"]
+     [:div {:class ["border border-gray-300 dark:border-0 rounded-md bg-white" 
+                    "dark:bg-slate-800 font-mono text-sm text-black dark:text-white" 
+                    "sm:h-[500px] h-[200px] xl:max-w-[618px] lg:max-w-[518px]"
+                    "md:max-w-[350px] overflow-auto p-3 -my-8 shadow-2xl"]
             :ref #(reset! container-el %)}
       [history-el repl-history]
       [:div {:class ["flex" "flex-row" "pl-2"]}
        (if (empty? @repl-multiline)
          [prompt-el]
          [:span ">"])
-       [:input {:class ["flex-1"
-                        "px-2"
-                        "outline-none"
-                        "bg-transparent"]
+       [:input {:class ["flex-1 px-2 outline-none bg-transparent"]
                 :type "text"
                 :autoComplete "off"
                 :autoCorrect "off"
@@ -100,4 +82,5 @@
                 :on-blur #(reset! has-focus false)
                 :on-key-down on-keydown
                 :on-change #(reset! repl-input (get-val %))}]]]]
+    ;; Clean up the tracker when component gets destroyed
     (finally (r/dispose! scroll-watch))))
