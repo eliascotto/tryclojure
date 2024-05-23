@@ -2,7 +2,6 @@
   (:require
    [clojure.string :as string]
    [reagent.core :as r]
-   ["parinfer" :as parinfer]
    [app.sci :as sci]
    [app.utils :as utils :refer [in?]]
    [app.env :refer [debug DEBUG]]
@@ -251,39 +250,17 @@
             last-in (last inputs)]
         (reset! repl-input (:value last-in))))))
 
-(defn- handle-change 
-  [in]
-  (let [input-cmd (input-command in)]
-    (when (not-empty input-cmd)
-      (let [;; Initial cursor pos
-            cursor-pos  (-> (utils/get-cursor-position @input-el) :start)
-            cursor-line (-> (utils/count-lines input-cmd) dec)
-
-            options    {:cursor-line cursor-line
-                        :cursor-x    cursor-pos}
-            indent-fmt (parinfer/indentMode input-cmd options)
-            cmd-fmt    (. indent-fmt -text)
-            cursor-x   (or (.-cursorX indent-fmt) cursor-pos)]
-        (when (and (.-success indent-fmt) (not= input-cmd cmd-fmt))
-          (reset! repl-input cmd-fmt)
-          (when cursor-x
-            (js/setTimeout
-             #(utils/set-cursor-position @input-el cursor-x)
-             0)))))))
-
   (defn focus-input
     "Focus on REPL input element."
     []
     (.focus @input-el))
 
 (defn view []
-  (r/with-let [input-watch (r/track! #(handle-change @repl-input))]
-    [:<>
-     [repl-view
-      {:input-el input-el
-       :input-placeholder input-placeholder
-       :on-keydown handle-keydown
-       :repl-input repl-input
-       :repl-history repl-history
-       :repl-multiline repl-multiline}]]
-    (finally (r/dispose! input-watch))))
+  [:<>
+   [repl-view
+    {:input-el input-el
+     :input-placeholder input-placeholder
+     :on-keydown handle-keydown
+     :repl-input repl-input
+     :repl-history repl-history
+     :repl-multiline repl-multiline}]])
