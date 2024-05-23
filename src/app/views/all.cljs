@@ -11,12 +11,9 @@
                  "shadow-lg"
                  "rounded-l-md"
                  "w-full"
-                 "h-min"
                  "p-8"
-                 "h-auto"
                  "opacity-95"
-                 "transition-all
-                  z-10"]}
+                 "transition-all z-10"]}
    (for [step tutorial]
      (let [title (:title step)
            content (:content step)]

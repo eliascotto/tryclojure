@@ -15,6 +15,7 @@
     "shadow-cljs": "^2.17.3"
   },
   "dependencies": {
+    "parinfer": "^3.13.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "tailwindcss": "^3.0.23"

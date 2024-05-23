@@ -1,7 +1,11 @@
 (ns app.tutorial
   (:require
    [clojure.string :as string]
+<<<<<<< Updated upstream
    [sci.impl.vars :refer [SciVar]]))
+=======
+   [sci.lang :refer [Var]]))
+>>>>>>> Stashed changes
 
 (def tutorial
   "Collection of map steps."
@@ -103,7 +107,7 @@
   **Global** variables are defined using `def`. Their value could be anything.
      
   Create a global variable called `foo` with a value. E.g. `(def foo \"bar\")`"
-    :test #(and (instance? SciVar %) (= "foo" (-> (.-meta %) :name str)))}
+    :test #(and (instance? Var %) (= "foo" (-> (.-meta %) :name str)))}
    ;; Let
    {:title "Let it be local"
     :content
@@ -192,5 +196,5 @@
       
   Some good resources to start are [Clojure koans](http://clojurekoans.com/), [4Clojure](https://4clojure.oxal.org/) or [exercism](https://exercism.org/tracks/clojure).
 
-  Ask the community for support, good luck!"
-     :test #(true? false)}])
+  Ask the community for support, and good luck!"
+    :test #(true? false)}])

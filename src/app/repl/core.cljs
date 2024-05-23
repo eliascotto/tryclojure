@@ -2,6 +2,7 @@
   (:require
    [clojure.string :as string]
    [reagent.core :as r]
+   ["parinfer" :as parinfer]
    [app.sci :as sci]
    [app.utils :as utils :refer [in?]]
    [app.env :refer [debug DEBUG]]
@@ -207,15 +208,17 @@
   the last command using arrow-up and a basic multiline
   in case of EOF error."
   [e]
-  (let [in @repl-input]
-    ;; Enter
-    (when (and (= (.-key e) "Enter") (not-empty in))
+  (let [in @repl-input
+        key-pressed (.-key e)]
+    (cond
+      ;; Enter pressed with non-empty input
+      (and (= key-pressed "Enter") (not-empty in))
       (let [in (str in \newline)]
-        (debug "input: " (pr-str in))
         (update-multiline! in)
         (write-input! in)
-        (let [cmd (input-command in)]
-          (try (let [out (sci/eval-string cmd)
+        (let [input-cmd (-> (input-command in)
+                            (utils/escape-html))]
+          (try (let [out (sci/eval-string input-cmd)
                      out-str (binding [*print-length* 20]
                                (pr-str out))]
                  (check-tutorial-test out)
@@ -230,7 +233,7 @@
                        (let [err-data (ex-data e)
                              delimiter (:edamame/expected-delimiter err-data)
                              col (:column err-data)]
-                         (reset! repl-multiline cmd)
+                         (reset! repl-multiline input-cmd)
                          (reset! input-placeholder (str "Expected delimiter `"
                                                         delimiter
                                                         "` column: "
@@ -240,24 +243,47 @@
                            (reset! input-placeholder nil)
                            ;; Append error to history
                            (write-repl! (.-message e) :error))))))
-        (reset-input!)))
-    ;; Arrow Up
-    (when (= (.-key e) "ArrowUp")
-      (let [inputs (filter #(= (:type %) :input) @repl-history)
+        (reset-input!))
+
+      ;; Arrow Up
+      (= key-pressed "ArrowUp")
+      (let [inputs  (filter #(= (:type %) :input) @repl-history)
             last-in (last inputs)]
         (reset! repl-input (:value last-in))))))
 
-(defn focus-input
-  "Focus on REPL input element."
-  []
-  (.focus @input-el))
+(defn- handle-change 
+  [in]
+  (let [input-cmd (input-command in)]
+    (when (not-empty input-cmd)
+      (let [;; Initial cursor pos
+            cursor-pos  (-> (utils/get-cursor-position @input-el) :start)
+            cursor-line (-> (utils/count-lines input-cmd) dec)
+
+            options    {:cursor-line cursor-line
+                        :cursor-x    cursor-pos}
+            indent-fmt (parinfer/indentMode input-cmd options)
+            cmd-fmt    (. indent-fmt -text)
+            cursor-x   (or (.-cursorX indent-fmt) cursor-pos)]
+        (when (and (.-success indent-fmt) (not= input-cmd cmd-fmt))
+          (reset! repl-input cmd-fmt)
+          (when cursor-x
+            (js/setTimeout
+             #(utils/set-cursor-position @input-el cursor-x)
+             0)))))))
+
+  (defn focus-input
+    "Focus on REPL input element."
+    []
+    (.focus @input-el))
 
 (defn view []
-  [:<>
-   [repl-view
-    {:input-el input-el
-     :input-placeholder input-placeholder
-     :on-keydown handle-keydown
-     :repl-input repl-input
-     :repl-history repl-history
-     :repl-multiline repl-multiline}]])
+  (r/with-let [input-watch (r/track! #(handle-change @repl-input))]
+    [:<>
+     [repl-view
+      {:input-el input-el
+       :input-placeholder input-placeholder
+       :on-keydown handle-keydown
+       :repl-input repl-input
+       :repl-history repl-history
+       :repl-multiline repl-multiline}]]
+    (finally (r/dispose! input-watch))))
