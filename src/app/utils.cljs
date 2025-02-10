@@ -21,13 +21,6 @@
   (and (exists? js/navigator)
        (.test #"Mac" (.-platform js/navigator))))
 
-(defn escape-html
-  "Change special characters into HTML character entities. Unsafe."
-  [s]
-  (-> s
-      (str/replace "<"  "&lt;")
-      (str/replace ">"  "&gt;")))
-
 (defn count-lines 
   "Count lines of give string `s`."
   [s]

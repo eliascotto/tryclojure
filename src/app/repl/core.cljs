@@ -215,8 +215,7 @@
       (let [in (str in \newline)]
         (update-multiline! in)
         (write-input! in)
-        (let [input-cmd (-> (input-command in)
-                            (utils/escape-html))]
+        (let [input-cmd (input-command in)]
           (try (let [out (sci/eval-string input-cmd)
                      out-str (binding [*print-length* 20]
                                (pr-str out))]
