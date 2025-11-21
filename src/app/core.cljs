@@ -35,9 +35,8 @@
                        "flex"
                        "flex-col"
                        "justify-between"]}
-         [header]
          [view]
-         [footer]]])
+         ]])
      [not-found/view])])
 
 ;; -------------------------

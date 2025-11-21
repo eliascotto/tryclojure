@@ -12,7 +12,12 @@
 ;; Collection of map with the REPL command history.
 (defonce repl-history
   (r/atom [{:type :special
-            :value "Type your Clojure symbolic expressions here"}]))
+            :value
+            [:div "Type your Clojure forms here. Full tutorial on "
+             [:a {:href "https://tryclojure.org" :target "_blank"}
+              "tryclojure.org"]]}
+           {:type :special
+            :value (str "Try (println  \"hello, chat!\"" ")")}]))
 
 ;; Store the REPL input while typed in the input el
 (defonce repl-input (r/atom nil))
@@ -62,15 +67,10 @@
   []
   (let [help-str ["Helper functions:"
                   ""
-                  "start     - Starts the tutorial"
-                  "restart   - Restarts the tutorial"
                   "clear     - Clears the entire REPL"
-                  "next-step - Jumps to the next step"
-                  "prev-step - Jumps to the previous step"
                   ""
                   "Use (doc name) for print the documentation of a function or a var given its name."
-                  ""
-                  "Press Ctrl-C to clear the REPL input."]]
+                  ""]]
     (doseq [s help-str]
       (write-repl! s)))
   nil)
@@ -142,9 +142,7 @@
 (sci/set-print-fn (fn [s] (write-repl! s)))
 
 ;; Append the start-tutorial function as 'start
-(sci/extend-ctx {:namespaces {'user {'start start-tutorial
-                                     'clear clear-repl
-                                     'restart restart-tutorial
+(sci/extend-ctx {:namespaces {'user {'clear clear-repl
                                      'my-name set-name
                                      'next-step inc-step!
                                      'prev-step dec-step!

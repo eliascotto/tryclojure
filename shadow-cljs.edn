@@ -1,5 +1,5 @@
 {:deps {:aliases [:dev]}
- :dev-http {8000 "resources/public"}
+ :dev-http {8080 "resources/public"}
 
  :builds
  {:app {:target :browser

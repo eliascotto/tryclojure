@@ -17,7 +17,7 @@ Let's have some fun! <span id=\"location-of-editor\">Here on the right</span>
 you have a **REPL**, a command line with a _read-eval-print_ loop. Everything
 you write will be evaluated. Try to type some expressions as `(+ 1 2)` or click
 on code to auto insert. You can type `(help)` for more commands.
-   
+
 Type `(start)` when you're ready!")
 
 (defn compute-step
@@ -106,19 +106,17 @@ Type `(start)` when you're ready!")
                      "flex-col"
                      "items-center"
                      "justify-center"
+                     "h-full"
                      "xl:-mt-32"
                      "lg:-mt-8"
                      "mt-0"]}
-       [:div {:class ["flex-1" "z-0"]}
-        [tutorial-view (compute-step)]]
        [:div {:class ["flex-1"
                       "z-10"
                       "sm:w-auto"
                       "w-full"
+                      "h-full"
                       "sm:mt-0"
-                      "mt-7"
-                      "sm:mb-0"
-                      "mb-14"]}
+                      ]}
         [repl/view]]])}))
 
 (defn- update-location-of-editor []
