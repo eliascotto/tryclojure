@@ -4,7 +4,7 @@ Try Clojure live in a REPL at [tryclojure.org](https://tryclojure.org)!
 
 A collection of examples to take familiarity with the Clojure syntax.
 
-**Contributions are welcome!**
+Blog post: [How to add a Clojure REPL to a web page](https://scotto.me/blog/2023-03-24-how-to-add-clojure-repl-to-webpage/)
 
 ## Build
 
